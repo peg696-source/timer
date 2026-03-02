@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<html>
 <body>
-    <div class="timer-container">
-        <h1>Simple Countdown Timer</h1>
-        <div id="countdown-display">00:00</div>
-        <button onclick="startTimer()">Start</button>
-    </div>
+  <h2>Live Timer</h2>
+  <div id="timer" style="font-size: 2em;">00:00:00</div>
 
-    <script src="script.js"></script>
+  <script>
+    // Set the start time
+    const startTime = new Date().getTime();
+
+    // Update the timer every 1 second
+    const interval = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = now - startTime;
+
+      // Time calculations
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display result
+      document.getElementById("timer").innerHTML = 
+        String(hours).padStart(2, '0') + ":" + 
+        String(minutes).padStart(2, '0') + ":" + 
+        String(seconds).padStart(2, '0');
+    }, 1000);
+  </script>
 </body>
 </html>
