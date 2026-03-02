@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Timer</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; display:flex; height:100vh; align-items:center; justify-content:center; }
+    #t { font-size: 48px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div id="t">--:--:--</div>
+
+<script>
+  const qs = new URLSearchParams(location.search);
+  const checkin = qs.get('checkin');   // expects an ISO-ish string
+  const checkout = qs.get('checkout'); // optional
+
+  // Parse dates robustly: best is ISO 8601 from Glide (e.g. 2026-02-25T20:15:00Z)
+  const start = checkin ? new Date(checkin).getTime() : NaN;
+  const endFixed = checkout ? new Date(checkout).getTime() : NaN;
+
+  function fmt(ms){
+    if (!Number.isFinite(ms) || ms < 0) return '--:--:--';
+    const s = Math.floor(ms/1000);
+    const hh = String(Math.floor(s/3600)).padStart(2,'0');
+    const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+    const ss = String(s%60).padStart(2,'0');
+    return `${hh}:${mm}:${ss}`;
+  }
+
+  const el = document.getElementById('t');
+
+  function render(){
+    const now = Date.now();
+    const end = Number.isFinite(endFixed) ? endFixed : now;
+    el.textContent = fmt(end - start);
+  }
+
+  render();
+  // Only tick if we don't have a checkout time yet:
+  if (!Number.isFinite(endFixed)) setInterval(render, 250);
+</script>
+</body>
+</html>
